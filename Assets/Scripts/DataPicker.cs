@@ -16,9 +16,14 @@ public class DataPicker : MonoBehaviour
      */
 
     private int day, month, year;
-    public TextMeshProUGUI dayText, monthText, yearText;
+    //public TextMeshProUGUI dayText, monthText, yearText;
+    private GameObject dayText, monthText,yearText;
     void Start()
     {
+        dayText = GameObject.Find("Day");
+        monthText = GameObject.Find("Month");
+        yearText = GameObject.Find("Year");
+        
         day = 1;
         month = 1;
         year = 1940;
@@ -43,7 +48,7 @@ public class DataPicker : MonoBehaviour
             day = 1;
         }
 
-        dayText.text = day.ToString();
+        dayText.GetComponent<TextMeshProUGUI>().text = day.ToString();
 
     }
 
@@ -57,7 +62,7 @@ public class DataPicker : MonoBehaviour
         {
             day = 1;
         }
-        dayText.text = day.ToString();
+        dayText.GetComponent<TextMeshProUGUI>().text = day.ToString();
 
 
     }
@@ -71,7 +76,7 @@ public class DataPicker : MonoBehaviour
         {
             month = 1;
         }
-        monthText.text = month.ToString();
+        monthText.GetComponent<TextMeshProUGUI>().text = month.ToString();
 
     }
 
@@ -84,7 +89,7 @@ public class DataPicker : MonoBehaviour
         {
             month = 12;
         }
-        monthText.text = month.ToString();
+        monthText.GetComponent<TextMeshProUGUI>().text = month.ToString();
 
     }
 
@@ -97,7 +102,7 @@ public class DataPicker : MonoBehaviour
         {
             year = 1940;
         }
-        yearText.text = year.ToString();
+        yearText.GetComponent<TextMeshProUGUI>().text = year.ToString();
 
     }
 
@@ -110,7 +115,7 @@ public class DataPicker : MonoBehaviour
         {
             year = 2002;
         }
-        yearText.text = year.ToString();
+        yearText.GetComponent<TextMeshProUGUI>().text = year.ToString();
 
     }
 
