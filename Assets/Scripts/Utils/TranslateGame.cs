@@ -7,6 +7,8 @@ using UnityEngine;
 public class TranslateGame : MonoBehaviour
 {
 
+    //This code recives all texts P: play Menu, O: OptionMenu, C: references CharacterMenu
+
     public TextMeshProUGUI PPlayText;
     public TextMeshProUGUI POptionsText;
     public TextMeshProUGUI PQuitText;
@@ -30,7 +32,9 @@ public class TranslateGame : MonoBehaviour
 
 
 
-
+    /// <summary>
+    /// Translate in english
+    /// </summary>
     public void english()
     {
 
@@ -41,10 +45,10 @@ public class TranslateGame : MonoBehaviour
 
 
 
-        OTextNick.text="Nick";
-        OLenguageText.text = "Lenguage";
-        OBloodText.text = "Blood";
-        OSongText.text = "Song";
+        OTextNick.text="Nick: ";
+        OLenguageText.text = "Lenguage: ";
+        OBloodText.text = "Blood: ";
+        OSongText.text = "Song: ";
         OBack.text = "Back";
         OApply.text = "Apply";
         ORestore.text = "Restore";
@@ -59,17 +63,19 @@ public class TranslateGame : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// Translate in spanish
+    /// </summary>
     public void spanish()
     {
         PPlayText.text = "Jugar";
         POptionsText.text = "Opciones";
         PQuitText.text = "Salir";
 
-        OTextNick.text = "Nick";
-        OLenguageText.text = "Lenguaje";
-        OBloodText.text = "Sangre";
-        OSongText.text = "Canción";
+        OTextNick.text = "Nick: ";
+        OLenguageText.text = "Lenguaje: ";
+        OBloodText.text = "Sangre: ";
+        OSongText.text = "Canción: ";
         OBack.text = "Volver";
         OApply.text = "Aplicar";
         ORestore.text = "Restaurar";

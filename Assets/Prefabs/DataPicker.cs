@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 
 /**
- * Data picker
+ * Data picker component
  */
 public class DataPicker : MonoBehaviour
 {
@@ -16,11 +14,14 @@ public class DataPicker : MonoBehaviour
      */
 
     private int day, month, year;
-    //public TextMeshProUGUI dayText, monthText, yearText;
     private GameObject dayText, monthText,yearText;
+
+    /// <summary>
+    /// Inicialize elements
+    /// </summary>
     void Start()
     {
-        dayText = GameObject.Find("Day");
+        dayText = GameObject.Find("Day");//Find label by name
         monthText = GameObject.Find("Month");
         yearText = GameObject.Find("Year");
         

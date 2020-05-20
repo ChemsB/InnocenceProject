@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
+using UnityEngine.UI;
 
 /**
  * Class with characters attributes
  */
 namespace Assets.Scripts
 {
-    class Character
+    public class Character
     {
 
         //Attributes
@@ -19,7 +20,8 @@ namespace Assets.Scripts
         private int capacity;
         private int health;
         private int speed;
-
+        private Sprite image;
+   
 
         //Constructors
         public Character()
@@ -27,13 +29,14 @@ namespace Assets.Scripts
 
         }
 
-        public Character(String name, int reload, int capacity, int health, int speed) 
+        public Character(String name, int reload, int capacity, int health, int speed, Sprite image) 
         {
             this.name = name;
             this.reload = reload;
             this.capacity = capacity;
             this.health = health;
             this.speed = speed;
+            this.image = image;
         }
 
         //Accessors
@@ -42,5 +45,6 @@ namespace Assets.Scripts
         public int Health { get => health; set => health = value; }
         public int Speed { get => speed; set => speed = value; }
         public string Name { get => name; set => name = value; }
+        public Sprite Image { get => image; set => image = value; } //Character image
     }
 }
