@@ -34,6 +34,25 @@ namespace TodoInnocence.Models
             Id = (int)cmd.LastInsertedId;
         }
 
+        public async Task UpdateAsync()
+        {
+            using var cmd = Db.Connection.CreateCommand();
+            cmd.CommandText = @"UPDATE `users` SET `Name` = @name, `Nick` = @nick WHERE `Id` = @id_user;";
+            BindParams(cmd);
+            BindId(cmd);
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        private void BindId(MySqlCommand cmd)
+        {
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@id_user",
+                DbType = DbType.Int32,
+                Value = Id,
+            });
+        }
+
         private void BindParams(MySqlCommand cmd)
         {
             cmd.Parameters.Add(new MySqlParameter

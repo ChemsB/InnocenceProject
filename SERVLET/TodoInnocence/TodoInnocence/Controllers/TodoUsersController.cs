@@ -41,10 +41,17 @@ namespace TodoInnocence.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoUser(long id, TodoUser todoUser)
+        public async Task<IActionResult> PutTodoUser(int id, TodoUser todoUser)
         {
-
-            return null;
+            await Db.Connection.OpenAsync();
+            var query = new UserPostQuery(Db);
+            var result = await query.FindOneAsync(id);
+            if (result is null)
+                return new NotFoundResult();
+            result.Name = todoUser.Name;
+            result.Nick = todoUser.Nick;
+            await result.UpdateAsync();
+            return new OkObjectResult(result);
         }
 
         // POST: api/TodoUsers
