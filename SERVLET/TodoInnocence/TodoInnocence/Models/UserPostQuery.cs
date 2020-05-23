@@ -10,7 +10,7 @@ namespace TodoInnocence.Models
 {
     public class UserPostQuery
     {
-        public AppDb Db { get; }
+        public AppDb Db { get; set; }
 
         public UserPostQuery(AppDb db)
         {
@@ -20,10 +20,10 @@ namespace TodoInnocence.Models
         public async Task<TodoUser> FindOneAsync(int id)
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `Id`, `Name`, `Nick` FROM `users` WHERE `Id` = @id_user";
+            cmd.CommandText = @"SELECT id_user, name, nick, id_videogame FROM users WHERE id_user = @Id";
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@id",
+                ParameterName = "@Id",
                 DbType = DbType.Int32,
                 Value = id,
             });
@@ -35,24 +35,29 @@ namespace TodoInnocence.Models
         public async Task<List<TodoUser>> LatestPostsAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT `id_user`, `name`, `nick`, `id_videogame` FROM `users`;";
+            cmd.CommandText = @"SELECT id_user, name, nick, id_videogame FROM users;";
             return await ReadAllAsync(await cmd.ExecuteReaderAsync());
         }
 
 
         private async Task<List<TodoUser>> ReadAllAsync(DbDataReader reader)
         {
-            var posts = new List<TodoUser>();
+            List <TodoUser> posts = new List<TodoUser>();
             using (reader)
             {
                 while (await reader.ReadAsync())
                 {
-                    var post = new TodoUser(Db)
+                    TodoUser post = new TodoUser(Db)
                     {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(1),
-                        Nick = reader.GetString(2),
-                        Id_videogame = reader.GetInt32(3),
+                           Id = reader.GetInt32(0),
+                           Name = reader.GetString(1),
+                           Nick = reader.GetString(2),
+                           Id_videogame = reader.GetInt32(3)
+
+                    /*    Id = Convert.ToInt32(reader["id_user"]),
+                        Name = reader["name"].ToString(),
+                        Nick = reader["nick"].ToString(),
+                        Id_videogame= Convert.ToInt32(reader["id_videogame"])*/
                     };
                     posts.Add(post);
                 }

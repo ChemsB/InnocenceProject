@@ -8,7 +8,7 @@ namespace TodoInnocence
 {
     public class AppDb : IDisposable
     {
-        public MySqlConnection Connection { get; }
+        public MySqlConnection Connection { get; set; }
 
         public AppDb(string connectionString)
         {

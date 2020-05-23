@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 using TodoInnocence.Models;
 
 namespace TodoInnocence.Controllers
@@ -13,7 +15,7 @@ namespace TodoInnocence.Controllers
     [ApiController]
     public class TodoUsersController : ControllerBase
     {
-        public AppDb Db { get; }
+        public AppDb Db { get; set; }
         public TodoUsersController(AppDb db)
         {
             Db = db;
@@ -26,22 +28,28 @@ namespace TodoInnocence.Controllers
             await Db.Connection.OpenAsync();
             var query = new UserPostQuery(Db);
             var result = await query.LatestPostsAsync();
+            JsonConvert.SerializeObject(result);
             return new OkObjectResult(result);
         }
 
         // GET: api/TodoUsers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoUser>> GetTodoUser(long id)
+        public async Task<ActionResult<TodoUser>> GetTodoUser(int id)
         {
-
-            return null;
+            await Db.Connection.OpenAsync();
+            var query = new UserPostQuery(Db);
+            var result = await query.FindOneAsync(id);
+            JsonConvert.SerializeObject(result);
+            if (result is null)
+                return new NotFoundResult();
+            return new OkObjectResult(result);
         }
 
         // PUT: api/TodoUsers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoUser(int id, TodoUser todoUser)
+        public async Task<IActionResult> PutTodoUser(int id,[FromQuery]TodoUser todoUser)
         {
             await Db.Connection.OpenAsync();
             var query = new UserPostQuery(Db);
@@ -51,6 +59,7 @@ namespace TodoInnocence.Controllers
             result.Name = todoUser.Name;
             result.Nick = todoUser.Nick;
             await result.UpdateAsync();
+            JsonConvert.SerializeObject(result);
             return new OkObjectResult(result);
         }
 
@@ -58,9 +67,9 @@ namespace TodoInnocence.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<TodoUser>> PostTodoUser(TodoUser todoUser)
+       // [ProducesResponseType(StatusCodes.Status201Created)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TodoUser>> PostTodoUser([FromQuery]TodoUser todoUser)
         {
             await Db.Connection.OpenAsync();
             todoUser.Db = Db;

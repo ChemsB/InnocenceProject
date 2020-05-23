@@ -9,7 +9,7 @@ namespace TodoInnocence.Models
 {
     public class TodoUser
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Nick { get; set; }
         public int Id_videogame { get; set; }
@@ -28,7 +28,7 @@ namespace TodoInnocence.Models
         public async Task InsertAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO `users` (`Name`, `Nick`) VALUES (@name, @nick);";
+            cmd.CommandText = @"INSERT INTO users (name, nick, id_videogame) VALUES (@Name, @Nick, @Id_videogame);";
             BindParams(cmd);
             await cmd.ExecuteNonQueryAsync();
             Id = (int)cmd.LastInsertedId;
@@ -37,7 +37,7 @@ namespace TodoInnocence.Models
         public async Task UpdateAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"UPDATE `users` SET `Name` = @name, `Nick` = @nick WHERE `Id` = @id_user;";
+            cmd.CommandText = @"UPDATE users SET name = @Name, nick = @Nick, id_videogame=@Id_videogame WHERE id_user = @Id;";
             BindParams(cmd);
             BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
@@ -57,6 +57,13 @@ namespace TodoInnocence.Models
         {
             cmd.Parameters.Add(new MySqlParameter
             {
+                ParameterName = "@id",
+                DbType = DbType.Int32,
+                Value = Id,
+            });
+
+            cmd.Parameters.Add(new MySqlParameter
+            {
                 ParameterName = "@name",
                 DbType = DbType.String,
                 Value = Name,
@@ -66,6 +73,12 @@ namespace TodoInnocence.Models
                 ParameterName = "@nick",
                 DbType = DbType.String,
                 Value = Nick,
+            });
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@id_videogame",
+                DbType = DbType.Int32,
+                Value = Id_videogame,
             });
         }
     }
