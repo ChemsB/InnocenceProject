@@ -14,5 +14,6 @@ namespace TodoInnocence.Models
         }
 
         public DbSet<TodoUser> TodoUsers { get; set; }
+        public DbSet<TodoRun> TodoRuns { get; set; }
     }
 }

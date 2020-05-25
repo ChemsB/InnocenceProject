@@ -12,6 +12,7 @@ namespace TodoInnocence.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Nick { get; set; }
+        public string Password { get; set; }
         public int Id_videogame { get; set; }
 
         internal AppDb Db { get; set; }
@@ -28,7 +29,7 @@ namespace TodoInnocence.Models
         public async Task InsertAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"INSERT INTO users (name, nick, id_videogame) VALUES (@Name, @Nick, @Id_videogame);";
+            cmd.CommandText = @"INSERT INTO users (id_user, name, nick, password, id_videogame) VALUES (@Id, @Name, @Nick, @Password, @Id_videogame);";
             BindParams(cmd);
             await cmd.ExecuteNonQueryAsync();
             Id = (int)cmd.LastInsertedId;
@@ -36,20 +37,41 @@ namespace TodoInnocence.Models
 
         public async Task UpdateAsync()
         {
-            using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"UPDATE users SET name = @Name, nick = @Nick, id_videogame=@Id_videogame WHERE id_user = @Id;";
+            using var cmd = Db.Connection.CreateCommand(); //where id_user = @Id
+            cmd.CommandText = @"UPDATE users SET name = @Name, nick = @Nick, password = @Password, id_videogame = @Id_videogame WHERE id_user = @Id;";
             BindParams(cmd);
             BindId(cmd);
+          //  BindNick(cmd);
+          //  BindPassword(cmd);
             await cmd.ExecuteNonQueryAsync();
         }
 
+        private void BindNick(MySqlCommand cmd)
+        {
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@nick",
+                DbType = DbType.String,
+                Value = Nick,
+            });
+        }
         private void BindId(MySqlCommand cmd)
         {
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@id_user",
+                ParameterName = "@Id",
                 DbType = DbType.Int32,
                 Value = Id,
+            });
+        }
+
+        private void BindPassword(MySqlCommand cmd)
+        {
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@password",
+                DbType = DbType.String,
+                Value = Password,
             });
         }
 
@@ -57,7 +79,7 @@ namespace TodoInnocence.Models
         {
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@id",
+                ParameterName = "@Id",
                 DbType = DbType.Int32,
                 Value = Id,
             });
@@ -73,6 +95,12 @@ namespace TodoInnocence.Models
                 ParameterName = "@nick",
                 DbType = DbType.String,
                 Value = Nick,
+            });
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@password",
+                DbType = DbType.String,
+                Value = Password,
             });
             cmd.Parameters.Add(new MySqlParameter
             {

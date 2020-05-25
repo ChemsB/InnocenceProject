@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using TodoInnocence.Models;
+using Renci.SshNet.Security.Cryptography;
 
 namespace TodoInnocence.Controllers
 {
@@ -33,12 +34,12 @@ namespace TodoInnocence.Controllers
         }
 
         // GET: api/TodoUsers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TodoUser>> GetTodoUser(int id)
+        [HttpGet("{nick}/{password}")]
+        public async Task<ActionResult<TodoUser>> GetTodoUser(String nick, String password)
         {
             await Db.Connection.OpenAsync();
             var query = new UserPostQuery(Db);
-            var result = await query.FindOneAsync(id);
+            var result = await query.FindOneAsync(nick,password);
             JsonConvert.SerializeObject(result);
             if (result is null)
                 return new NotFoundResult();
@@ -48,22 +49,25 @@ namespace TodoInnocence.Controllers
         // PUT: api/TodoUsers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoUser(int id,[FromQuery]TodoUser todoUser)
+        [HttpPut("{nick}/{password}")]
+        public async Task<IActionResult> PutTodoUser(String nick, String password, [FromQuery]TodoUser todoUser)
         {
             await Db.Connection.OpenAsync();
             var query = new UserPostQuery(Db);
-            var result = await query.FindOneAsync(id);
+            var result = await query.FindOneAsync(nick, password);
             if (result is null)
                 return new NotFoundResult();
+
+            result.Id = todoUser.Id;
             result.Name = todoUser.Name;
             result.Nick = todoUser.Nick;
+            result.Password = todoUser.Password;
             await result.UpdateAsync();
             JsonConvert.SerializeObject(result);
             return new OkObjectResult(result);
         }
 
-        // POST: api/TodoUsers
+        // POST: api/TodoUsers/
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
@@ -75,19 +79,6 @@ namespace TodoInnocence.Controllers
             todoUser.Db = Db;
             await todoUser.InsertAsync();
             return new OkObjectResult(todoUser);
-        }
-
-        // DELETE: api/TodoUsers/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<TodoUser>> DeleteTodoUser(long id)
-        {
-
-            return null;
-        }
-
-        private bool TodoUserExists(long id)
-        {
-            return false;
         }
     }
 }

@@ -17,16 +17,24 @@ namespace TodoInnocence.Models
             Db = db;
         }
 
-        public async Task<TodoUser> FindOneAsync(int id)
+        public async Task<TodoUser> FindOneAsync(String nick, String password)
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT id_user, name, nick, id_videogame FROM users WHERE id_user = @Id";
+            cmd.CommandText = @"SELECT id_user, name, nick, password, id_videogame FROM users WHERE nick = @Nick AND password = @Password";
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@Id",
-                DbType = DbType.Int32,
-                Value = id,
+                ParameterName = "@Nick",
+                DbType = DbType.String,
+                Value = nick,
             });
+            cmd.Parameters.Add(new MySqlParameter
+            {
+                ParameterName = "@Password",
+                DbType = DbType.String,
+                Value = password,
+            });
+
+
             var result = await ReadAllAsync(await cmd.ExecuteReaderAsync());
             return result.Count > 0 ? result[0] : null;
         }
@@ -35,7 +43,7 @@ namespace TodoInnocence.Models
         public async Task<List<TodoUser>> LatestPostsAsync()
         {
             using var cmd = Db.Connection.CreateCommand();
-            cmd.CommandText = @"SELECT id_user, name, nick, id_videogame FROM users;";
+            cmd.CommandText = @"SELECT id_user, name, nick, password, id_videogame FROM users;";
             return await ReadAllAsync(await cmd.ExecuteReaderAsync());
         }
 
@@ -52,7 +60,8 @@ namespace TodoInnocence.Models
                            Id = reader.GetInt32(0),
                            Name = reader.GetString(1),
                            Nick = reader.GetString(2),
-                           Id_videogame = reader.GetInt32(3)
+                           Password= reader.GetString(3),
+                           Id_videogame = reader.GetInt32(4)
 
                     /*    Id = Convert.ToInt32(reader["id_user"]),
                         Name = reader["name"].ToString(),
