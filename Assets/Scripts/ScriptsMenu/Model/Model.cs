@@ -1,0 +1,186 @@
+﻿
+
+using Assets.Scripts;
+using Assets.Scripts.Persist;
+using Assets.Scripts.ScriptsMenu.Persist;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+
+public class Model
+{
+
+    LocalRun run;
+
+    CharacterDao characterDao; //Character DAO
+    UserDao userDao; //User DAO
+    LocalRunDao gameDao; //Game DAO
+
+    List<Character> listWithCharacter; //List with characters
+    List<Player> listWithPlayers; //List with users
+    List<LocalRun> listWithGameData; //List with game data
+
+
+
+    //Constructor
+    public Model()
+    {
+        listWithCharacter = new List<Character>();
+        listWithPlayers = new List<Player>();
+        listWithGameData = new List<LocalRun>();
+        characterDao = CharacterDao.Instance;
+        userDao = UserDao.Instance;
+        gameDao = LocalRunDao.Instance;
+
+    }
+
+    /// <summary>
+    /// Load saved games
+    /// </summary>
+    /// <returns>list with the saved data of each character </returns>
+    public List<LocalRun> loadGame()
+    {
+        listWithGameData = new List<LocalRun>();
+        listWithGameData=gameDao.loadGame();
+        return listWithGameData;
+    }
+
+    /// <summary>
+    /// Save game with attributes of the moment
+    /// </summary>
+    /// <param name="save">data to save</param>
+    /// <returns>true if saved, false in other case</returns>
+    public bool saveGame(LocalRun save)
+    {
+        bool res = false;
+        gameDao.saveGame(save);
+        return res;
+    }
+
+
+    /// <summary>
+    /// Load characters with test attributes and default sprite
+    /// </summary>
+    /// <returns>List with characters</returns>
+    public List<Character> loadCharacters()
+    {
+        listWithCharacter = characterDao.ListWithCharacters;
+        return listWithCharacter;
+    }
+
+    /// <summary>
+    /// Login user with nick and password
+    /// </summary>
+    /// <param name="nick">user nick</param>
+    /// <param name="password">user password</param>
+    /// <returns></returns>
+    internal bool login(string nick, string password)
+    {
+        bool res = false;
+        res = userDao.loginUser(nick, password);
+        return res;
+    }
+
+
+    /// <summary>
+    /// Load users with test data
+    /// </summary>
+    /// <returns>List with users</returns>
+    public List<Player> loadUsers()
+    {
+        listWithPlayers = userDao.ListWithUsers;
+        return listWithPlayers;
+    }
+
+    /// <summary>
+    /// Check if nick is already used
+    /// </summary>
+    /// <param name="nick">nick to check</param>
+    /// <returns>true in case of exists nick, false if not exist</returns>
+    public Boolean checkNick(String nick)
+    {
+
+        bool res = false;
+        res = userDao.checkIfExistNick(nick);
+        return res;
+
+    }
+
+
+    /// <summary>
+    /// Add new user into a list
+    /// </summary>
+    /// <param name="player">user to add</param>
+    /// <returns>true in case of added, false in otherwise case</returns>
+    public IEnumerator insertNewUser(Player player)
+    {
+        return userDao.addNewPlayer(player);
+    }
+
+    /// <summary>
+    /// Change the nick of the user
+    /// </summary>
+    /// <param name="player">player to change nick</param>
+    /// <param name="newNick">new nick to replace old nick</param>
+    /// <returns>true in case of changed, false in case of exists new nick</returns>
+    public bool changeNick(string oldNick, string newNick)
+    {
+
+        bool res;
+        res = userDao.changeNick(oldNick, newNick);
+        return res;
+
+    }
+
+
+    /// <summary>
+    /// Load game data for one character
+    /// </summary>
+    /// <param name="characterId">character to load</param>
+    /// <returns></returns>
+    public LocalRun lastCharacetrRun(int characterId)
+    {
+        LocalRun lastRun = null;
+        lastRun = gameDao.findRun(characterId);
+        return lastRun;
+    }
+
+    /// <summary>
+    /// Find character with id
+    /// </summary>
+    /// <param name="id">id to find</param>
+    /// <returns>character with attributes</returns>
+    public Character findCaharacterWithId(int id)
+    {
+        Character character = new Character();
+
+        foreach (Character characters in loadCharacters())
+        {
+
+            if (characters.Id == id)
+            {
+                character = characters;
+            }
+        }
+        return character;
+
+    }
+
+    /// <summary>
+    /// Save the character and the coordinates of the game
+    /// </summary>
+    /// <param name="vector">coordinates</param>
+    /// <param name="character">character attributes</param>
+    /// <returns>true in case of saving, false in case of error</returns>
+    public Boolean checkPoint(Vector3 vector, Character character)
+    {
+        bool res = false;
+        res = gameDao.checkPoint(vector,character);
+        return res;
+    }
+
+
+
+}
