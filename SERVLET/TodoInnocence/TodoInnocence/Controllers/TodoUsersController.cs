@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TodoInnocence.Controllers
 {
-  //  [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class TodoUsersController : ControllerBase
@@ -26,6 +26,7 @@ namespace TodoInnocence.Controllers
         }
 
         // GET: api/TodoUsers
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoUser>>> GetTodoUsers()
         {
@@ -37,6 +38,7 @@ namespace TodoInnocence.Controllers
         }
 
         // GET: api/TodoUsers/5
+        [Authorize]
         [HttpGet("{nick}/{password}")]
         public async Task<ActionResult<TodoUser>> GetTodoUser(String nick, String password)
         {
@@ -50,16 +52,18 @@ namespace TodoInnocence.Controllers
         }
 
         // GET: api/TodoUsers
+        [Authorize]
         [HttpGet("GetUser")]
         public async Task<ActionResult<TodoUser>> GetTodoUserAuth()
         {
             String nick = HttpContext.User.Identity.Name;
 
-            var user = await _context.TodoUsers
-                .Where(user => user.Nick == nick)
-                .FirstOrDefaultAsync();
+             await Db.Connection.OpenAsync();
+             var query = new UserPostQuery(Db);
+             List<TodoUser> users = await query.LatestPostsAsync();
 
-            user.Password = null;
+            TodoUser user = users.Where(user => user.Nick == nick).FirstOrDefault();
+
             if(user==null)
             {
                 return NotFound();
@@ -73,6 +77,7 @@ namespace TodoInnocence.Controllers
         // PUT: api/TodoUsers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        [Authorize]
         [HttpPut("{nick}/{password}")]
         public async Task<IActionResult> PutTodoUser(String nick, String password, [FromQuery]TodoUser todoUser)
         {

@@ -1,6 +1,4 @@
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.csprojAssemblyReference.cache
-C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.csproj.CoreCompileInputs.cache
-C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.AssemblyInfoInputs.cache
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.AssemblyInfo.cs
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\bin\Debug\netcoreapp3.1\appsettings.Development.json
@@ -161,3 +159,5 @@ C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.dll
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.pdb
 C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.genruntimeconfig.cache
+C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.csproj.CoreCompileInputs.cache
+C:\Users\alex-\Desktop\PROYECTO INNOCENCE\TodoInnocence\TodoInnocence\obj\Debug\netcoreapp3.1\TodoInnocence.MvcApplicationPartsAssemblyInfo.cache

@@ -1,6 +1,7 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace TodoInnocence.Models
 {
     public class TodoRun
     {
+        [Key]
         public int Id_run { get; set; }
         public int Score { get; set; }
         public DateTime Date { get; set; }

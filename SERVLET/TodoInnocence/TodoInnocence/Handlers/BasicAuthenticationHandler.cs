@@ -16,7 +16,8 @@ namespace TodoInnocence.Handlers
     public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly TodoContext _context;
-        public BasicAuthenticationHandler(
+        public AppDb Db { get; set; }
+        public BasicAuthenticationHandler( AppDb db,
             IOptionsMonitor<AuthenticationSchemeOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
@@ -25,6 +26,7 @@ namespace TodoInnocence.Handlers
             : base(options,logger,encoder,clock)
         {
             _context = context;
+            Db = db;
         }
 
 
@@ -42,7 +44,13 @@ namespace TodoInnocence.Handlers
                 string nick = credentials[0];
                 string password = credentials[1];
 
-                TodoUser user = _context.TodoUsers.Where(user => user.Nick == nick && user.Password == password).FirstOrDefault();
+                await Db.Connection.OpenAsync();
+                UserPostQuery query = new UserPostQuery(Db);
+                List<TodoUser> users = await query.LatestPostsAsync();
+
+                TodoUser user =users.Where(user => user.Nick == nick && user.Password == password).FirstOrDefault();
+
+                //TodoUser user = _context.TodoUsers.Where(user => user.Nick == nick && user.Password == password).FirstOrDefault();
                 if(user == null)
                     AuthenticateResult.Fail("Invalid nick or password");
 
