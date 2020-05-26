@@ -9,13 +9,16 @@ using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 using TodoInnocence.Models;
 using Renci.SshNet.Security.Cryptography;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TodoInnocence.Controllers
 {
+  //  [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TodoUsersController : ControllerBase
     {
+        private readonly TodoContext _context;
         public AppDb Db { get; set; }
         public TodoUsersController(AppDb db)
         {
@@ -46,6 +49,27 @@ namespace TodoInnocence.Controllers
             return new OkObjectResult(result);
         }
 
+        // GET: api/TodoUsers
+        [HttpGet("GetUser")]
+        public async Task<ActionResult<TodoUser>> GetTodoUserAuth()
+        {
+            String nick = HttpContext.User.Identity.Name;
+
+            var user = await _context.TodoUsers
+                .Where(user => user.Nick == nick)
+                .FirstOrDefaultAsync();
+
+            user.Password = null;
+            if(user==null)
+            {
+                return NotFound();
+            }
+
+            return new OkObjectResult(user);
+        }
+
+
+
         // PUT: api/TodoUsers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
@@ -58,10 +82,7 @@ namespace TodoInnocence.Controllers
             if (result is null)
                 return new NotFoundResult();
 
-            result.Id = todoUser.Id;
-            result.Name = todoUser.Name;
             result.Nick = todoUser.Nick;
-            result.Password = todoUser.Password;
             await result.UpdateAsync();
             JsonConvert.SerializeObject(result);
             return new OkObjectResult(result);

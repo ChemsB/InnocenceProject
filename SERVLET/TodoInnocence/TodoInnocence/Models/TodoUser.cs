@@ -38,9 +38,9 @@ namespace TodoInnocence.Models
         public async Task UpdateAsync()
         {
             using var cmd = Db.Connection.CreateCommand(); //where id_user = @Id
-            cmd.CommandText = @"UPDATE users SET name = @Name, nick = @Nick, password = @Password, id_videogame = @Id_videogame WHERE id_user = @Id;";
+            cmd.CommandText = @"UPDATE users SET nick = @Nick  WHERE id_user = @Id;";
             BindParams(cmd);
-            BindId(cmd);
+                       //    BindId(cmd);
           //  BindNick(cmd);
           //  BindPassword(cmd);
             await cmd.ExecuteNonQueryAsync();

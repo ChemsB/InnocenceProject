@@ -60,7 +60,6 @@ namespace TodoInnocence.Controllers
             result.Id_run = todoRun.Id_run;
             result.Score = todoRun.Score;
             result.Date = todoRun.Date;
-            result.Id_user = todoRun.Id_user;
             result.Id_character = todoRun.Id_character;
 
             await result.UpdateAsync();

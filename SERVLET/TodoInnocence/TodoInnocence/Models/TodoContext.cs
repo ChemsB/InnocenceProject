@@ -12,6 +12,9 @@ namespace TodoInnocence.Models
            : base(options)
         {
         }
+        public TodoContext()
+        {
+        }
 
         public DbSet<TodoUser> TodoUsers { get; set; }
         public DbSet<TodoRun> TodoRuns { get; set; }

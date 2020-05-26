@@ -35,7 +35,7 @@ namespace TodoInnocence.Models
             using var cmd = Db.Connection.CreateCommand();
             cmd.CommandText = @"UPDATE run SET id_run = @Id_run, score = @Score, data = @Date, id_character = @Id_character WHERE id_user = @Id_user;";
             BindParams(cmd);
-            BindId(cmd);
+          //  BindId(cmd);
             await cmd.ExecuteNonQueryAsync();
         }
 
@@ -66,7 +66,7 @@ namespace TodoInnocence.Models
             });
             cmd.Parameters.Add(new MySqlParameter
             {
-                ParameterName = "@data",
+                ParameterName = "@date",
                 DbType = DbType.DateTime,
                 Value = Date,
             });
