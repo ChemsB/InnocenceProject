@@ -54,19 +54,23 @@ public class Register : MonoBehaviour
         {
             if (conditions.GetComponent<Toggle>().isOn)
             {
+                int checkNick = model.checkNick(nick);
 
-                if (model.checkNick(nick))
+                if (checkNick == 0)
                 {
                     showMessage("Nick already exists!");
                 }
-                else
+                else if(checkNick==1)
                 {
                     player.Name = name; // add new user data
                     player.Nick = nick;
                     player.Password = password;
-                    Debug.Log(player.Password);
                     insertUser(player); // insert user
                     MenuManager.switchToMenu(2); //Open play menu
+                }
+                else
+                {
+                    showMessage("the server is not available try later");
                 }
             }
             else
@@ -82,11 +86,22 @@ public class Register : MonoBehaviour
     /// <param name="message">message to display</param>
     private void showMessage(string message)
     {
-        #if UNITY_EDITOR
-        EditorUtility.DisplayDialog("Info", message, "Ok");
-        #endif
+        PlayerPrefs.SetString("messageToShow", message);
+        MenuManager.switchToMenu(6);
+
 
     }
+
+    /// <summary>
+    /// Returns to login window
+    /// </summary>
+    public void cancel()
+    {
+        MenuManager.switchToMenu(0);
+    }
+
+
+
 
     /// <summary>
     /// Insert new user in a list and set id internaly
@@ -98,7 +113,7 @@ public class Register : MonoBehaviour
         player.Id_videogame=1;
         PlayerPrefs.SetString("nick", player.Nick);
         StartCoroutine(model.insertNewUser(player));
-        //model.insertNewUser(player);
+
     }
 
 

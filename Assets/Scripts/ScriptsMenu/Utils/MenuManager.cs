@@ -13,6 +13,8 @@ public class MenuManager : MonoBehaviour
     private static GameObject registerMenu;
     private static GameObject optionsPanel;
     private static GameObject characterSelectPanel;
+    private static GameObject controlsMenu;
+    private static GameObject showMessage;
 
     //Load and find all aplication menus
     void Start()
@@ -24,6 +26,8 @@ public class MenuManager : MonoBehaviour
         mainMenuPanel = GameObject.Find("MainMenu");//2
         characterSelectPanel = GameObject.Find("CharacterSelector");//3
         optionsPanel = GameObject.Find("OptionMenu");//4
+        controlsMenu = GameObject.Find("Controls");
+        showMessage = GameObject.Find("Message");
 
         switchToMenu(menuID);
     }
@@ -43,19 +47,31 @@ public class MenuManager : MonoBehaviour
         switch (menuID)
         {
             case 0:
+                PlayerPrefs.SetInt("oldWindow", 0);
                 loginMenu.gameObject.SetActive(true); //Active Login Menu
                 break;
             case 1:
+                PlayerPrefs.SetInt("oldWindow", 1);
                 registerMenu.gameObject.SetActive(true); //Active register menu
                 break;
             case 2:
+                PlayerPrefs.SetInt("oldWindow", 2);
                 mainMenuPanel.gameObject.SetActive(true); //Active main menu
                 break;
             case 3:
+                PlayerPrefs.SetInt("oldWindow", 3);
                 characterSelectPanel.gameObject.SetActive(true); //Active character Menu Selector
                 break;
             case 4:
+                PlayerPrefs.SetInt("oldWindow", 4);
                 optionsPanel.gameObject.SetActive(true); //Active Options Menu
+                break;
+            case 5:
+                PlayerPrefs.SetInt("oldWindow",5);
+                controlsMenu.gameObject.SetActive(true); //Active Options Menu
+                break;
+            case 6:
+                showMessage.gameObject.SetActive(true); //Active message
                 break;
         }
     }

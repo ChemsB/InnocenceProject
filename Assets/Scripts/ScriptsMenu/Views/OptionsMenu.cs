@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -8,10 +9,11 @@ using UnityEngine.UI;
 public class OptionsMenu : MonoBehaviour
 {
 
-    private GameObject nickField, lenguage, bloodYes, bloodNo, song;
+    private GameObject nickField, lenguage, song;
     string oldNick, newNick;
    
     public TranslateGame translate;
+    private List<string> songs;
     private Model model;
 
    public void Start()
@@ -22,14 +24,12 @@ public class OptionsMenu : MonoBehaviour
     //Initialize components
     void initComponents()
     {
-
         model = new Model();
 
+        PlayerPrefs.SetString("Song", "0");
         //Find elements in option menu
         nickField = GameObject.Find("InputNick");
         lenguage = GameObject.Find("LenguageSelector");
-        bloodYes = GameObject.Find("Yes");
-        bloodNo = GameObject.Find("No");
         song = GameObject.Find("SongSelector");
 
 
@@ -74,8 +74,7 @@ public class OptionsMenu : MonoBehaviour
     public void restoreElements()
     {
         lenguage.GetComponent<TMP_Dropdown>().value = 0;
-        bloodYes.GetComponent<Toggle>().isOn = true;
-        bloodNo.GetComponent<Toggle>().isOn = false;
+        PlayerPrefs.SetString("Song", "0");
         song.GetComponent<TMP_Dropdown>().value = 0;
         translate.english();
 
@@ -96,8 +95,7 @@ public class OptionsMenu : MonoBehaviour
         {
             changeNick();
         }
-
-        //Apply blood and song changes (TODO)
+        PlayerPrefs.SetString("Song", song.GetComponent<TMP_Dropdown>().value.ToString());
 
     }
 
@@ -128,7 +126,6 @@ public class OptionsMenu : MonoBehaviour
 
         if (changeNick)
         {
-            showMessage("Nick changed!");
             PlayerPrefs.SetString("nick", newNick);
         }
         else
@@ -147,9 +144,8 @@ public class OptionsMenu : MonoBehaviour
     /// <param name="message">message to display</param>
     private void showMessage(string message)
     {
-    #if UNITY_EDITOR
-        EditorUtility.DisplayDialog("Info", message, "Ok");
-    #endif
+        PlayerPrefs.SetString("messageToShow", message);
+        MenuManager.switchToMenu(6);
     }
 
     /// <summary>

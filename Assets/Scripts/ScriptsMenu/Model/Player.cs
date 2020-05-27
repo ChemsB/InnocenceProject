@@ -10,6 +10,7 @@ namespace Assets.Scripts
     [Serializable]
     public class Player
     {
+        public int id;
         public string name;
         public string nick;
         public bool endGame;
@@ -23,8 +24,9 @@ namespace Assets.Scripts
         {
         }
 
-        public Player(string name, string nick, bool endGame, float score, string password,int id_videogame)
+        public Player(int id, string name, string nick, bool endGame, float score, string password,int id_videogame)
         {
+            this.id = id;
             this.name = name;
             this.nick = nick;
             this.endGame = endGame;
@@ -40,5 +42,6 @@ namespace Assets.Scripts
         public float Score { get => score; set => score = value; }
         public string Password { get => password; set => password = value; }
         public int Id_videogame { get => id_videogame; set => id_videogame = value; }
+        public int Id { get => id; set => id = value; }
     }
 }

@@ -23,7 +23,8 @@ namespace Assets.Scripts.ScriptsMenu.Persist
         /// <returns>connection to the database</returns>
         public SqliteConnection OpenConnection()
         {
-            connect = new SqliteConnection("URI=file:" + Application.dataPath + "/Resources/DB/InnocenceLocal.db");
+            String dbName = "InnocenceLocal";
+            connect = new SqliteConnection("URI=file:" + Application.dataPath + "/StreamingAssets/InnocenceLocal.db");
             return connect;
         }
 

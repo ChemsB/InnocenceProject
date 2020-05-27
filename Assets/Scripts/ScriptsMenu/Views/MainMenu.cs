@@ -32,4 +32,32 @@ public class MainMenu : MonoBehaviour
         MenuManager.switchToMenu(0);
     }
 
+    /// <summary>
+    /// Open Ranking
+    /// </summary>
+    public void openRanking()
+    {
+        if (!PlayerPrefs.GetString("mode").Equals("Offline"))
+        {
+            SceneManager.LoadScene("ShowRanking");
+        }
+        else
+        {
+            showMessage("Please login!");
+        }
+    }
+
+
+    /// <summary>
+    /// Show message
+    /// </summary>
+    /// <param name="message">message to display</param>
+    private void showMessage(string message)
+    {
+        PlayerPrefs.SetString("messageToShow", message);
+        MenuManager.switchToMenu(6);
+
+
+    }
+
 }

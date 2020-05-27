@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class LoginMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
 
     private GameObject inputNick, inputPassword;
     Model model;
@@ -16,7 +15,9 @@ public class LoginMenu : MonoBehaviour
         initComponents();
     }
 
-
+    /// <summary>
+    /// Initialize game objects
+    /// </summary>
     private void initComponents()
     {
         model = new Model();
@@ -29,7 +30,7 @@ public class LoginMenu : MonoBehaviour
     /// </summary>
     public void login()
     {
-        bool res;
+        int res;
         string nick = inputNick.GetComponent<InputField>().text;
         string password = inputPassword.GetComponent<InputField>().text;
 
@@ -41,16 +42,19 @@ public class LoginMenu : MonoBehaviour
         {
             res = model.login(nick, password);
 
-            if (res)
+            if (res==0)
             {
-                showMessage("Welcome!");
                 PlayerPrefs.SetString("mode", "Online");
                 PlayerPrefs.SetString("nick", nick);
                 MenuManager.switchToMenu(2);
             }
-            else
+            else if(res==1)
             {
                 showMessage("wrong credentials!");
+            }
+            else
+            {
+                showMessage("the server is not available, try leter!");
             }
         }
 
@@ -70,15 +74,8 @@ public class LoginMenu : MonoBehaviour
     /// </summary>
     public void playOffline()
     {
-
-        #if UNITY_EDITOR
-        if (EditorUtility.DisplayDialog("Wait!", "If you play offline you will not be able to " +
-            "share your scores, are you sure? ", "Yes", "No"))
-        {
-            PlayerPrefs.SetString("mode", "Offline");
-            MenuManager.switchToMenu(2);
-        }
-        #endif
+        PlayerPrefs.SetString("mode", "Offline");
+        MenuManager.switchToMenu(2);
 
 
     }
@@ -90,10 +87,8 @@ public class LoginMenu : MonoBehaviour
     /// <param name="message">message to display</param>
     private void showMessage(string message)
     {
-        #if UNITY_EDITOR
-        EditorUtility.DisplayDialog("Info", message, "Ok");
-        #endif
-
+        PlayerPrefs.SetString("messageToShow", message);
+        MenuManager.switchToMenu(6);
     }
 
 

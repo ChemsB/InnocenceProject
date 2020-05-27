@@ -8,6 +8,7 @@ using UnityEngine;
 public class LocalRun
 {
 
+
     private int id;
     private float x;
     private float y;

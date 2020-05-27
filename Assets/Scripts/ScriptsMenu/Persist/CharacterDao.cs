@@ -57,9 +57,7 @@ namespace Assets.Scripts.Persist
                         dataReader.GetValue(1).ToString(), 
                         int.Parse(dataReader.GetValue(2).ToString()),
                         int.Parse(dataReader.GetValue(3).ToString()),
-                        int.Parse(dataReader.GetValue(4).ToString()),
-                        int.Parse(dataReader.GetValue(5).ToString()), 
-                        Resources.Load<Sprite>(dataReader.GetValue(6).ToString())));
+                        Resources.Load<Sprite>(dataReader.GetValue(4).ToString())));
                 }
             }
             conn.Close();

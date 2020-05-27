@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -19,6 +20,7 @@ namespace Assets.Scripts.Persist
     {
 
         private string serverUrl = "http://localhost:60300/api/TodoUsers";
+    
         
         private readonly static UserDao userDao = new UserDao();
         List<Player> listWithUsers;
@@ -26,12 +28,14 @@ namespace Assets.Scripts.Persist
         //Constructor singleton pattern
         private UserDao()
         {
+         
             loadTestData();
         }
 
 
         public static UserDao Instance
         {
+
             get
             {
                 return userDao;
@@ -44,19 +48,27 @@ namespace Assets.Scripts.Persist
         /// </summary>
         private void loadTestData()
         {
-            listWithUsers = new List<Player>();
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format(serverUrl));
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            string jsonResponse = fixJson(reader.ReadToEnd());
 
-
-            Player[] players = JsonHelper.FromJson<Player>(jsonResponse);
-
-
-            for (int i = 0; i < players.Length; i++)
+            try
             {
-                listWithUsers.Add(players[i]);
+                listWithUsers = new List<Player>();
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format(serverUrl));
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string jsonResponse = fixJson(reader.ReadToEnd());
+
+
+                Player[] players = JsonHelper.FromJson<Player>(jsonResponse);
+
+
+                for (int i = 0; i < players.Length; i++)
+                {
+                    listWithUsers.Add(players[i]);
+                }
+            }
+            catch (Exception ex)
+            {
+                listWithUsers = null;
             }
 
         }
@@ -78,27 +90,38 @@ namespace Assets.Scripts.Persist
         /// </summary>
         /// <param name="nick">user nick to check</param>
         /// <param name="password">user password</param>
-        /// <returns>true if exist user, false in case of error</returns>
-        internal bool loginUser(string nick, string password)
+        /// <returns>true 0 exist user, 1 if not exist, 2 in case of server error</returns>
+        internal int loginUser(string nick, string password)
         {
-            bool res = false;
+            int res;
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("http://localhost:60300/api/TodoUsers/{0}/{1}", nick, password));
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            string jsonResponse = fixJson(reader.ReadToEnd());
-
-            Player player = JsonUtility.FromJson<Player>(jsonResponse);
-
-            if (player != null)
+            try
             {
-                res = true;
-            }
-            else
-            {
-                res = false;
-            }
 
+                //Check with base64 if user is register for do http petitions
+                var request = (HttpWebRequest)WebRequest.Create("http://localhost:60300/api/TodoUsers");
+                string svcCredentials = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(nick + ":" + password));
+                request.Headers.Add("Authorization", "Basic " + svcCredentials);
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string jsonResponse = fixJson(reader.ReadToEnd());
+                Player player = JsonUtility.FromJson<Player>(jsonResponse);
+               
+
+                if (player != null)
+                {
+                    res = 0;
+                }
+                else
+                {
+                    res = 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex.Message); 
+                res = 2;
+            }
             return res;
         }
 
@@ -113,12 +136,19 @@ namespace Assets.Scripts.Persist
             public bool changeNick(string oldNick, string newNick)
         {
             bool res = false;
-            bool checkNick;
+            int checkNick;
 
             checkNick = checkIfExistNick(newNick);
 
-            if (!checkNick)
+            if (checkNick==1)
             {
+                /*HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("http://localhost:60300/api/TodoUsers/chems20/test?nick=tessssteo"));
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string jsonResponse = fixJson(reader.ReadToEnd());
+
+                Debug.Log(jsonResponse);*/
+
                 Player player = findUserByNick(oldNick);
 
                 if (player != null)
@@ -135,19 +165,22 @@ namespace Assets.Scripts.Persist
         /// Check nick is already exist
         /// </summary>
         /// <param name="nickToCheck">nick to check</param>
-        /// <returns>true if exist, false if not exist</returns>
-        public bool checkIfExistNick(string nickToCheck)
+        /// <returns>0 if exist, 1 if not exist, 2 in case of error with server</returns>
+        public int checkIfExistNick(string nickToCheck)
         {
-            bool res = false;
+            int res = 0;
 
             Player player = findUserByNick(nickToCheck);
             if (player == null)
             {
-                res = false;
+                res = 2;
             }
-            else
+            else if(player != null && player.Id_videogame!=-1)
             {
-                res = true;
+                res = 0;
+            }else if(player.Id_videogame == -1)
+            {
+                res = 1;
             }
 
             return res;
@@ -163,7 +196,7 @@ namespace Assets.Scripts.Persist
         {
             bool res = true;
 
-            string url= String.Format("http://localhost:60300/api/TodoUsers?name={0}&nick={1}&password={2}&id_videogame={3}", player.Name,player.Nick,player.Password,player.id_videogame);
+            string url= String.Format("http://localhost:60300/api/TodoUsers?name={0}&nick={1}&password={2}&id_videogame={3}", player.Name,player.Nick, player.password, player.id_videogame);
 
             WWWForm form = new WWWForm();
             UnityWebRequest uwr = UnityWebRequest.Post(url, form);
@@ -171,6 +204,7 @@ namespace Assets.Scripts.Persist
 
             if (uwr.isNetworkError)
             {
+
                 Debug.Log("Error While Sending: " + uwr.error);
             }
             else
@@ -185,19 +219,41 @@ namespace Assets.Scripts.Persist
         /// Find user by nick
         /// </summary>
         /// <param name="nick">nick to find</param>
-        /// <returns>user data or null in case of error</returns>
+        /// <returns>user data or player with id videogame -1 if not exist, return null in case of server error</returns>
         private Player findUserByNick(string nick)
         {
-            Player player = null;
+            Player player = new Player();
+            
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("http://localhost:60300/api/TodoUsers/{0}", nick));
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                StreamReader reader = new StreamReader(response.GetResponseStream());
+                string jsonResponse = fixJson(reader.ReadToEnd());
 
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("http://localhost:60300/api/TodoUsers/{0}", nick));
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream());
-            string jsonResponse = fixJson(reader.ReadToEnd());
+                player = JsonUtility.FromJson<Player>(jsonResponse);
 
-            player = JsonUtility.FromJson<Player>(jsonResponse);
 
+            }
+            catch (WebException ex)
+            {
+
+                HttpWebResponse errorResponse = ex.Response as HttpWebResponse;
+                if (errorResponse!=null && errorResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+           
+                    player.Id_videogame = -1;
+                    return player;
+                }
+                else
+                {
+                    player = null;
+                }
+
+                
+            }
             return player;
+
         }
 
         //Accessors

@@ -10,28 +10,28 @@ public class TranslateGame : MonoBehaviour
     //Montar servei web restfull que retorne datos
 
 
+
     public TextMeshProUGUI PPlayText;
     public TextMeshProUGUI POptionsText;
     public TextMeshProUGUI PQuitText;
 
-
     public TextMeshProUGUI OTextNick;
     public TextMeshProUGUI OLenguageText;
-    public TextMeshProUGUI OBloodText;
     public TextMeshProUGUI OSongText;
     public TextMeshProUGUI OBack;
     public TextMeshProUGUI OApply;
     public TextMeshProUGUI ORestore;
 
-
-    public TextMeshProUGUI CReload;
-    public TextMeshProUGUI CCapacity;
     public TextMeshProUGUI CHealth;
     public TextMeshProUGUI CSpeed;
     public TextMeshProUGUI CBack;
 
+    public TextMeshProUGUI CControls;
+    public TextMeshProUGUI CPlayGame;
 
-
+    public TextMeshProUGUI CcontrTextControls;
+    public TextMeshProUGUI CcontrBack;
+    public TextMeshProUGUI CcontrSapce;
 
     /// <summary>
     /// Translate in english
@@ -47,20 +47,25 @@ public class TranslateGame : MonoBehaviour
 
         OTextNick.text="Nick: ";
         OLenguageText.text = "Lenguage: ";
-        OBloodText.text = "Blood: ";
         OSongText.text = "Song: ";
         OBack.text = "Back";
         OApply.text = "Apply";
         ORestore.text = "Restore";
 
 
-        CReload.text = "Reload: ";
-        CCapacity.text = "Capacity: ";
         CHealth.text = "Health: ";
         CSpeed.text = "Speed: ";
         CBack.text = "Back";
 
-    }
+        CControls.text="Controls";
+        CPlayGame.text="Play Game";
+
+        CcontrTextControls.text="Controls";
+        CcontrBack.text="Back";
+        CcontrSapce.text="Active Dialog";
+
+
+}
 
 
     /// <summary>
@@ -74,18 +79,24 @@ public class TranslateGame : MonoBehaviour
 
         OTextNick.text = "Nick: ";
         OLenguageText.text = "Lenguaje: ";
-        OBloodText.text = "Sangre: ";
         OSongText.text = "Canción: ";
         OBack.text = "Volver";
         OApply.text = "Aplicar";
         ORestore.text = "Restaurar";
 
 
-        CReload.text = "Recarga: ";
-        CCapacity.text = "Munición: ";
         CHealth.text = "Vida: ";
         CSpeed.text = "Velocidad: ";
         CBack.text = "Volver";
+
+        CControls.text = "Controles";
+        CPlayGame.text = "Jugar";
+
+        CcontrTextControls.text = "Controles";
+        CcontrBack.text = "Volver";
+        CcontrSapce.text = "Activar Dialogo";
+
+
     }
 
 

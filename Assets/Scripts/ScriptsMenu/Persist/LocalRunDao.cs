@@ -53,23 +53,6 @@ namespace Assets.Scripts.ScriptsMenu.Persist
 
             cmd.ExecuteNonQuery();
             conn.Close();
-
-            /*SqliteCommand insertSQL = new SqliteCommand("INSERT INTO local_run (x,y,health,scene,time) VALUES (2,?,?,?,?)");
-            insertSQL.Parameters.Add(save.X);
-            insertSQL.Parameters.Add(save.Y);
-            insertSQL.Parameters.Add(save.Health);
-            insertSQL.Parameters.Add(save.Scene);
-            insertSQL.Parameters.Add(save.Timer);
-
-            try
-            {
-                insertSQL.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            conn.Close();*/
         }
 
         /// <summary>

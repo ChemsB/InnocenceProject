@@ -30,7 +30,6 @@ public class CheckPoint : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            MenuManager.switchToMenu(0);
             StartCoroutine(ShowMessage(2));
         }
     }

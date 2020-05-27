@@ -2,6 +2,7 @@
 
 using Assets.Scripts;
 using Assets.Scripts.Persist;
+using Assets.Scripts.ScriptsMenu.Model;
 using Assets.Scripts.ScriptsMenu.Persist;
 using System;
 using System.Collections;
@@ -17,10 +18,12 @@ public class Model
     CharacterDao characterDao; //Character DAO
     UserDao userDao; //User DAO
     LocalRunDao gameDao; //Game DAO
+    RankingDao rankingDao; //Ranking DAO
 
     List<Character> listWithCharacter; //List with characters
     List<Player> listWithPlayers; //List with users
     List<LocalRun> listWithGameData; //List with game data
+    List<Ranking> listWithRanking; //List with ranking data
 
 
 
@@ -30,9 +33,24 @@ public class Model
         listWithCharacter = new List<Character>();
         listWithPlayers = new List<Player>();
         listWithGameData = new List<LocalRun>();
+        listWithRanking = new List<Ranking>();
         characterDao = CharacterDao.Instance;
         userDao = UserDao.Instance;
         gameDao = LocalRunDao.Instance;
+        rankingDao = RankingDao.Instance;
+
+    }
+
+
+    /// <summary>
+    /// Load all runs with score
+    /// </summary>
+    /// <returns>list with scores</returns>
+    public List<Ranking> loadAllRankings()
+    {
+        listWithRanking = new List<Ranking>();
+        listWithRanking = rankingDao.loadRankings();
+        return listWithRanking;
 
     }
 
@@ -75,10 +93,10 @@ public class Model
     /// </summary>
     /// <param name="nick">user nick</param>
     /// <param name="password">user password</param>
-    /// <returns></returns>
-    internal bool login(string nick, string password)
+    /// <returns>true 0 exist user, 1 if not exist, 2 in case of server error</returns>
+    internal int login(string nick, string password)
     {
-        bool res = false;
+        int res = 0;
         res = userDao.loginUser(nick, password);
         return res;
     }
@@ -98,11 +116,11 @@ public class Model
     /// Check if nick is already used
     /// </summary>
     /// <param name="nick">nick to check</param>
-    /// <returns>true in case of exists nick, false if not exist</returns>
-    public Boolean checkNick(String nick)
+    /// <returns>0 if exist, 1 if not exist, 2 in case of error with server</returns>
+    public int checkNick(String nick)
     {
 
-        bool res = false;
+        int res = 0;
         res = userDao.checkIfExistNick(nick);
         return res;
 

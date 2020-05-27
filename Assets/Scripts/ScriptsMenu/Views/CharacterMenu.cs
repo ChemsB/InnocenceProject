@@ -93,8 +93,6 @@ public class CharacterMenu : MonoBehaviour
         //Show name
         nameText.text = character.Name;
         //Show attributes with bars
-        reloadBar.value = character.Reload;
-        capacityBar.value = character.Capacity;
         healthBar.value = character.Health;
         speedBar.value = character.Speed;
         //Display character image
@@ -118,8 +116,16 @@ public class CharacterMenu : MonoBehaviour
     public void openGame()
     {
         PlayerPrefs.SetInt("idSelectedCharacter", character.Id);
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene("MainHall");
 
+    }
+
+    /// <summary>
+    /// Open menu with controls help
+    /// </summary>
+    public void openControls()
+    {
+        MenuManager.switchToMenu(5);
     }
 
 
